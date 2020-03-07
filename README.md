@@ -15,9 +15,10 @@ Tests written with [Spock Framework](http://spockframework.org/).
 
 ----
 
-
 ### Level 2
+
 ----
+
 ### Task 1
 ####Description:
 
@@ -36,8 +37,10 @@ Write a function answer(s) which takes a string representing employees walking a
 #### Test cases: [L2Solution1Test](src/test/java/com/github/angrycellophane/foobar/l2/L2Solution1Test.groovy)
 
 ----
+
 ### Task 2
-####Description:
+#### Description:
+
 
 The LAMBCHOP's engineers have given you lists identifying the placement of groups of pegs along various support beams. You need to place a gear on each peg (otherwise the gears will collide with unoccupied pegs). The engineers have plenty of gears in all different sizes stocked up, so you can choose gears of any size, from a radius of 1 on up. Your goal is to build a system where the last gear rotates at twice the rate (in revolutions per minute, or rpm) of the first gear, no matter the direction. Each gear (except the last) touches and turns the gear on the next peg to the right.
 
@@ -57,7 +60,7 @@ The list pegs will be given sorted in ascending order and will contain at least 
 
 ---
 ### Task 1
-#### Description 
+#### Description
 
  Doomsday Fuel
  
