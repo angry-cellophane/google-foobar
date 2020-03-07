@@ -17,7 +17,7 @@ package com.github.angrycellophane.foobar.l2;
  * If an employee moving left met then that employee will meet and salute every employee moving right we've met before,
  * so the number of salutes increases by the number of employees met before and moving right multiplied by 2.
  */
-public class Solution2 {
+public class L2Solution1 {
     public static int solution(String hallway) {
         int salutes = 0;
         int toRight = 0;

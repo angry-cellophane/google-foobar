@@ -3,12 +3,12 @@ package com.github.angrycellophane.foobar.l2
 import spock.lang.Specification
 import spock.lang.Unroll
 
-class Solution3Test extends Specification {
+class L2Solution2Test extends Specification {
 
     @Unroll
     void tests() {
         expect:
-        assert Solution3.solution(input) == expected
+        assert L2Solution2.solution(input) == expected
 
         where:
         input                | expected

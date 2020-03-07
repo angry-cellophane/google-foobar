@@ -54,7 +54,7 @@ package com.github.angrycellophane.foobar.l2;
  * 2 + 6 > next peg == 6
  * there is an additional check for such cases.
  */
-public class Solution3 {
+public class L2Solution2 {
     public static int[] solution(int[] pegs) {
         if (pegs == null || pegs.length < 2) return notPossible();
 
