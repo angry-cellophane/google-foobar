@@ -39,7 +39,7 @@ import java.util.List;
  * Let's say there is a graph where every node of the graph represents a room and and an edge between nodes is a corridor that is constrained by a given capacity.
  * With the given source (the entrances) nodes and sink nodes (the exists) this becomes a flow network - https://en.wikipedia.org/wiki/Flow_network
  * Finding the total number of bunnies that can get through at each time step is the same as finding the maximum flow between each source and sink nodes in the given flow network.
- * Dinic's algorithm can be used to find the maximum flow between each source and sink nodes, the total result is the sum of the maximum flows.
+ * Dinic's algorithm is be used to find the maximum flow between each source and sink nodes, the total result is the sum of the maximum flows.
  * https://en.wikipedia.org/wiki/Dinic%27s_algorithm
  */
 
