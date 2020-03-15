@@ -105,29 +105,32 @@ public class L4Solution2 {
         }
 
         /**
-         * @param pointers array of indices of edges to visit per node.
+         * After BFS checked if there is a possible flow and updated levels
+         * DFS is used to check if flow can be sent for every suitable edge and corresponding subgraph.
+         *
+         * @param edgePointers array of indices of edges to visit per node, to keep track of next edges to visit.
          * @param levels levels assigned to each node. levels[i] is the level of this.nodes[i] node.
-         * @param to index of the source node, sink
          * @param from index of the target node
-         * @param flow current flow sent by
+         * @param to index of the source node, sink
+         * @param flow current flow value
          * @return augment flow
          * returns 0 if blocking flow found.
          */
-        private int dinicDfs(int[] pointers, int[] levels, int from, int to, int flow) {
+        private int dinicDfs(int[] edgePointers, int[] levels, int from, int to, int flow) {
             if (from == to) {
                 return flow;
             }
-            while (pointers[from] < nodes[from].size()) {
-                Edge edge = nodes[from].get(pointers[from]);
+            while (edgePointers[from] < nodes[from].size()) {
+                Edge edge = nodes[from].get(edgePointers[from]);
                 if (levels[edge.to] == levels[from] + 1 && edge.flow < edge.capacity) {
-                    int augmentFlow = dinicDfs(pointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
+                    int augmentFlow = dinicDfs(edgePointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
                     if (augmentFlow > 0) {
                         edge.flow += augmentFlow;
                         nodes[edge.to].get(edge.index).flow -= augmentFlow;
                         return augmentFlow;
                     }
                 }
-                pointers[from]++;
+                edgePointers[from]++;
             }
             return 0;
         }
@@ -137,9 +140,9 @@ public class L4Solution2 {
 
             int[] levels;
             while ((levels = dinicBfs(from, to)) != null) {
-                int[] pointers = new int[nodes.length];
+                int[] edgePointers = new int[nodes.length];
                 while (true) {
-                    int augmentFlow = dinicDfs(pointers, levels, from, to, Integer.MAX_VALUE);
+                    int augmentFlow = dinicDfs(edgePointers, levels, from, to, Integer.MAX_VALUE);
                     if (augmentFlow == 0)
                         break;
                     flow += augmentFlow;
