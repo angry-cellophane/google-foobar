@@ -126,7 +126,7 @@ public class L4Solution2 {
                     int augmentFlow = dinicDfs(edgePointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
                     if (augmentFlow > 0) {
                         edge.flow += augmentFlow;
-                        nodes[edge.to].get(edge.index).flow -= augmentFlow;
+                        nodes[edge.to].get(edge.reversed).flow -= augmentFlow;
                         return augmentFlow;
                     }
                 }
@@ -166,13 +166,13 @@ public class L4Solution2 {
 
     static class Edge {
         final int to; // represents target node of the edge
-        final int index; // index of the reversed edge in adjacency list to quickly find it.
+        final int reversed; // index of the reversed edge in adjacency list to quickly find it.
         final int capacity;
         int flow; // flow value in the edge
 
-        public Edge(int to, int index, int capacity) {
+        public Edge(int to, int reversed, int capacity) {
             this.to = to;
-            this.index = index;
+            this.reversed = reversed;
             this.capacity = capacity;
         }
     }
