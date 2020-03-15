@@ -72,52 +72,77 @@ public class L4Solution2 {
             this.nodes[to].add(new Edge(from, nodes[from].size() - 1, 0));
         }
 
-        private boolean dinicBfs(int from, int to, int[] distance) {
-            Arrays.fill(distance, -1);
-            distance[from] = 0;
+        /**
+            Finds if more flow can be sent from source to target nodes.
+            Also assigns level to each reachable node and returns an array of them.
+            array index is the original index of the node, e.g. same as in path[i][i]
+            if node is not reachable its value is -1;
+
+         @return array of size nodes.length, each element is the level the node with the same index in the nodes array has.
+                value is null if no more flow can be sent.
+         **/
+        private int[] dinicBfs(int from, int to) {
+            int[] levels = new int[nodes.length];
+            Arrays.fill(levels, -1);
+
+            levels[from] = 0;
             int[] queue = new int[nodes.length];
             int queueSize = 0;
-            queue[queueSize++] = from;
+            queue[queueSize] = from;
+            queueSize++;
             for (int i = 0; i < queueSize; i++) {
                 int node = queue[i];
                 for (Edge edge : this.nodes[node]) {
-                    if (distance[edge.to] < 0 && edge.flow < edge.capacity) {
-                        distance[edge.to] = distance[node] + 1;
-                        queue[queueSize++] = edge.to;
+                    if (levels[edge.to] < 0 && edge.flow < edge.capacity) {
+                        levels[edge.to] = levels[node] + 1;
+                        queue[queueSize] = edge.to;
+                        queueSize++;
                     }
                 }
             }
 
-            return distance[to] >= 0;
+            return levels[to] >= 0 ? levels : null;
         }
 
-        private int dinicDfs(int[] ptr, int[] distance, int to, int from, int baseFlow) {
-            if (from == to)
-                return baseFlow;
-            for (; ptr[from] < nodes[from].size(); ++ptr[from]) {
-                Edge edge = nodes[from].get(ptr[from]);
-                if (distance[edge.to] == distance[from] + 1 && edge.flow < edge.capacity) {
-                    int adjustedFlow = dinicDfs(ptr, distance, to, edge.to, Math.min(baseFlow, edge.capacity - edge.flow));
-                    if (adjustedFlow > 0) {
-                        edge.flow += adjustedFlow;
-                        nodes[edge.to].get(edge.index).flow -= adjustedFlow;
-                        return adjustedFlow;
+        /**
+         * @param pointers array of indices of edges to visit per node.
+         * @param levels levels assigned to each node. levels[i] is the level of this.nodes[i] node.
+         * @param to index of the source node, sink
+         * @param from index of the target node
+         * @param flow current flow sent by
+         * @return augment flow
+         * returns 0 if blocking flow found.
+         */
+        private int dinicDfs(int[] pointers, int[] levels, int from, int to, int flow) {
+            if (from == to) {
+                return flow;
+            }
+            while (pointers[from] < nodes[from].size()) {
+                Edge edge = nodes[from].get(pointers[from]);
+                if (levels[edge.to] == levels[from] + 1 && edge.flow < edge.capacity) {
+                    int augmentFlow = dinicDfs(pointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
+                    if (augmentFlow > 0) {
+                        edge.flow += augmentFlow;
+                        nodes[edge.to].get(edge.index).flow -= augmentFlow;
+                        return augmentFlow;
                     }
                 }
+                pointers[from]++;
             }
             return 0;
         }
 
         public int maxFlow(int from, int to) {
             int flow = 0;
-            int[] distance = new int[nodes.length];
-            while (dinicBfs(from, to, distance)) {
-                int[] ptr = new int[nodes.length];
+
+            int[] levels;
+            while ((levels = dinicBfs(from, to)) != null) {
+                int[] pointers = new int[nodes.length];
                 while (true) {
-                    int df = dinicDfs(ptr, distance, to, from, Integer.MAX_VALUE);
-                    if (df == 0)
+                    int augmentFlow = dinicDfs(pointers, levels, from, to, Integer.MAX_VALUE);
+                    if (augmentFlow == 0)
                         break;
-                    flow += df;
+                    flow += augmentFlow;
                 }
             }
             return flow;
