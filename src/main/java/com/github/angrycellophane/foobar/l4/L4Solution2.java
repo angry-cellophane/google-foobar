@@ -141,12 +141,11 @@ public class L4Solution2 {
             int[] levels;
             while ((levels = assignLevelsWithBfs(from, to)) != null) {
                 int[] edgePointers = new int[nodes.length];
-                while (true) {
-                    int augmentFlow = findAugmentFlowWithDfs(edgePointers, levels, from, to, Integer.MAX_VALUE);
-                    if (augmentFlow == 0)
-                        break;
+                int augmentFlow;
+                do {
+                    augmentFlow = findAugmentFlowWithDfs(edgePointers, levels, from, to, Integer.MAX_VALUE);
                     flow += augmentFlow;
-                }
+                } while (augmentFlow != 0);
             }
             return flow;
         }
