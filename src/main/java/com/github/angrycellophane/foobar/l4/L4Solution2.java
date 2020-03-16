@@ -81,7 +81,7 @@ public class L4Solution2 {
          @return array of size nodes.length, each element is the level the node with the same index in the nodes array has.
                 value is null if no more flow can be sent.
          **/
-        private int[] dinicBfs(int from, int to) {
+        private int[] assignLevelsWithBfs(int from, int to) {
             int[] levels = new int[nodes.length];
             Arrays.fill(levels, -1);
 
@@ -116,14 +116,14 @@ public class L4Solution2 {
          * @return augment flow
          * returns 0 if blocking flow found.
          */
-        private int dinicDfs(int[] edgePointers, int[] levels, int from, int to, int flow) {
+        private int findAugmentFlowWithDfs(int[] edgePointers, int[] levels, int from, int to, int flow) {
             if (from == to) {
                 return flow;
             }
             while (edgePointers[from] < nodes[from].size()) {
                 Edge edge = nodes[from].get(edgePointers[from]);
                 if (levels[edge.to] == levels[from] + 1 && edge.flow < edge.capacity) {
-                    int augmentFlow = dinicDfs(edgePointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
+                    int augmentFlow = findAugmentFlowWithDfs(edgePointers, levels, edge.to, to, Math.min(flow, edge.capacity - edge.flow));
                     if (augmentFlow > 0) {
                         edge.flow += augmentFlow;
                         nodes[edge.to].get(edge.reversed).flow -= augmentFlow;
@@ -139,10 +139,10 @@ public class L4Solution2 {
             int flow = 0;
 
             int[] levels;
-            while ((levels = dinicBfs(from, to)) != null) {
+            while ((levels = assignLevelsWithBfs(from, to)) != null) {
                 int[] edgePointers = new int[nodes.length];
                 while (true) {
-                    int augmentFlow = dinicDfs(edgePointers, levels, from, to, Integer.MAX_VALUE);
+                    int augmentFlow = findAugmentFlowWithDfs(edgePointers, levels, from, to, Integer.MAX_VALUE);
                     if (augmentFlow == 0)
                         break;
                     flow += augmentFlow;
